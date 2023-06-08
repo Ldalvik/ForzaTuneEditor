@@ -14,7 +14,7 @@ const App = () => {
         {currentComponent}
       </div>
 
-      <footer><p>Website updated June 2, 2023</p></footer>
+      <footer><p>Website updated June 6, 2023</p></footer>
       <script>fixScale(document);</script>
     </div>
   )
