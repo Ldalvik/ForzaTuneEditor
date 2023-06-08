@@ -6,6 +6,7 @@ const NavBar = ({ isTutorial, onButtonClick }) => {
                     <h1>Forza Horizon Appearance Editor</h1>
                     <p>No more ugly parts on locked tunes.</p>
                     <p className="version">Version 0.0.1</p>
+                    <p className="view"><a onClick={onButtonClick}>{isTutorial ? "Editor" : "Tutorial"}</a></p>
                     <ul>
                         <button className="btn" onClick={onButtonClick}>{isTutorial ? "Editor" : "Tutorial"}</button>
                     </ul>
