@@ -1,10 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import TuningAPI from '../TuningAPI/core/TuningAPI'
 import PartInput from './PartInput'
+import TuneFileHandler from '../TuningAPI/core/TuneFileHandler'
 
 const Home = () => {
     const [currentState, setCurrentState] = useState({
-        api: null, tuneFileName: null, error: null,
+        fileHandler: null,
+        tuneFiles: [],
+        api: null,
+        tuneFileId: null,
+        error: null,
         ordinal: null,
         carBody: 0,
         frontBumper: 0,
@@ -12,32 +17,46 @@ const Home = () => {
         rearWing: 0,
         hood: 0,
         sideskirts: 0,
-        //rims: 0
+        //rims: 0, 
+        //turbo: 0
     })
 
-    const onTuneFileUpload = async (e) => {
-        const uploadedFile = e.target.files[0]
-        const tuneFileBytes = Array.from(new Uint8Array(await uploadedFile.arrayBuffer()))
-        const api = new TuningAPI(tuneFileBytes)
-        if (api.tuneFile.length === 378) {
+    async function loadTuneFiles() {
+        const fileHandler = new TuneFileHandler()
+        try {
+            await fileHandler.loadTuneFiles()
             setCurrentState({
-                api: api, tuneFileName: uploadedFile.name,
-                ordinal: api.getOrdinal(),
-                carBody: api.getCarBody(),
-                frontBumper: api.getFrontBumper(),
-                rearBumper: api.getRearBumper(),
-                rearWing: api.getRearWing(),
-                hood: api.getHood(),
-                sideskirts: api.getSideskirts(),
-                //rims: api.getRims(),
-                //turbo: api.getTurbo()
+                ...currentState,
+                tuneFiles: fileHandler.tuneFiles,
+                fileHandler: fileHandler
             })
-        } else {
-            setCurrentState({ ...currentState, error: `File is not 378 bytes. (${api.tuneFile.length} bytes)` })
+        } catch (error) {
+            console.log(error);
         }
     }
 
-    function downloadTuneFile() {
+    let handleTuneChange = (e) => {
+        const tuneFile = currentState.tuneFiles.find((tuneFile) => tuneFile.id === e.target.value)
+        const api = new TuningAPI(tuneFile.data)
+        setCurrentState({
+            ...currentState,
+            api: api,
+            tuneFileId: tuneFile.id,  // Get metadata name eventually
+            ordinal: api.getOrdinal(),
+            carBody: api.getCarBody(),
+            frontBumper: api.getFrontBumper(),
+            rearBumper: api.getRearBumper(),
+            rearWing: api.getRearWing(),
+            hood: api.getHood(),
+            sideskirts: api.getSideskirts(),
+            //rims: api.getRims(),
+            //turbo: api.getTurbo()
+        })
+    }
+
+    const saveTune = async (tuneFileId, tuneFile) => currentState.fileHandler.saveTune(tuneFileId, tuneFile)
+
+    function saveTuneFile() {
         const api = currentState.api
         api.setCarBody(currentState.carBody)
         api.setFrontBumper(currentState.frontBumper)
@@ -48,30 +67,35 @@ const Home = () => {
         api.setSideskirts(currentState.sideskirts)
         // api.setRims(currentState.rims)
         // api.setTurbo(currentState.turbo)
-        
-        const obj = URL.createObjectURL(new Blob([api.tuneFile], { type: 'application/octet-stream' }))
-        document.createElement('a', { 
-            href: obj, 
-            download: currentState.tuneFileName 
-        }).dispatchEvent(new MouseEvent('click'))
-        URL.revokeObjectURL(obj)
+        saveTune(currentState.tuneFileId, api.tuneFile)
+       // loadTuneFiles() // reload tune files to reflect changes
     }
 
     const onInputChange = (e) => setCurrentState({ ...currentState, [e.target.id]: e.target.value })
+
+    const checkForza = async () => {
+        const fileHandler = new TuneFileHandler()
+        if (!await fileHandler.checkForzaExists(false)) { // check for steam version eventually
+            setCurrentState({
+                ...currentState,
+                error: `It seems that the Microsoft version of Forza wasn't detected on your PC. Make sure ${fileHandler.FORZA_PATH} exists and is accesible.`
+            })
+        }
+    }
+    checkForza()
 
     return (
         <div>
             <section>
                 <h1>About</h1>
-                <p>Change the appearance of locked tunes from any Forza Horizon title. This website is not affiliated with</p>
+                <p>Change the appearance of locked tunes from any Forza Horizon title.</p>
             </section>
 
             <section>
-                <h1>Upload Tune File</h1>
-                <p>All values will be saved when you click download.</p>
-
-                <input type="file" onChange={onTuneFileUpload} />
-
+                <select class="btn" onClick={loadTuneFiles} onChange={handleTuneChange}>
+                    <option style={{textAlign:'center'}} key={0} value={"Select a tune"}>-- Select a tune --</option>
+                    {currentState.tuneFiles.map((tuneFile) => <option key={tuneFile.id} value={tuneFile.id}>{tuneFile.id}</option>)}
+                </select>
                 <p className="error-text">{currentState.error}</p>
                 <p>Ordinal: {currentState.ordinal}</p>
             </section>
@@ -134,10 +158,8 @@ const Home = () => {
 
             <section>
                 <h1>Finish</h1>
-                <p>Replace the file you uploaded with the file downloaded here. Make sure the file name is exactly the same,
-                    remove any trailing text like `_1` or `(1)`. Microsoft tune files have NO extension, steam tune files will end in .Data
-                </p>
-                <button className="btn" type="button" onClick={downloadTuneFile}>Download</button>
+                <p>Changes apply instantly, make sure you are not in the tuning menu or catalog, as it may cause crashes.</p>
+                <button className="btn" type="button" onClick={saveTuneFile}>Save Tune</button>
                 <br />
             </section>
         </div>
