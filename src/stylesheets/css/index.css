@@ -10,7 +10,7 @@ html {
 }
 
 body {
-    padding: 50px 0;
+    padding: 20px 0;
     margin: 0;
     font: 14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #c2c2c2;
@@ -108,6 +108,7 @@ header ul {
     width: auto
 }
 
+
 .btn {
     height: 33px;
     width: auto;
@@ -142,8 +143,12 @@ header ul {
     transition: all .1s ease-in;
     background-color: #1a9cc4;
     box-shadow: 0 3px 4px 0px rgba(0, 0, 0, .9);
-    border-bottom: 1px solidrgb(13, 94, 118)4;
+    border-bottom: 1px solid rgb(13, 94, 118);
+}
 
+select option {
+    background: rgba(44, 44, 44);
+    color: d9d9d9;
 }
 
 section {
@@ -349,16 +354,15 @@ screen and (max-width: 580px) {
         display: block
     }
 
+    header p a { 
+        cursor: pointer
+    }
+
     header p {
         width: 100%
     }
 }
 
-@media print {
-    header p.view a small:before {
-        content: 'at https://github.com/'
-    }
-}
 
 input[type=range] {
     width: 50%;
