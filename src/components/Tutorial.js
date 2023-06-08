@@ -1,8 +1,4 @@
-// const fs = window.require('fs');
 const Tutorial = () => {
-    
-    // fs.readdir('./', (_err, files) => files.forEach(file => console.log(file)))
-
     return (
         <div>
             <section>
