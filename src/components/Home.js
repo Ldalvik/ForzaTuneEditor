@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import TuningAPI from '../TuningAPI/core/TuningAPI'
 import PartInput from './PartInput'
 import TuneFileHandler from '../TuningAPI/core/TuneFileHandler'
+import { toast } from 'react-toastify'
 
 const Home = () => {
     const [currentState, setCurrentState] = useState({
@@ -36,6 +37,8 @@ const Home = () => {
     }
 
     let handleTuneChange = (e) => {
+        if (e.target.value === "Select a tune") return
+
         const tuneFile = currentState.tuneFiles.find((tuneFile) => tuneFile.id === e.target.value)
         const api = new TuningAPI(tuneFile.data)
         setCurrentState({
@@ -71,8 +74,19 @@ const Home = () => {
         api.setSideskirts(currentState.sideskirts)
         // api.setRims(currentState.rims)
         // api.setTurbo(currentState.turbo)
-        saveTune(currentState.tuneFileId, api.tuneFile)
-       // loadTuneFiles() // reload tune files to reflect changes
+        if (saveTune(currentState.tuneFileId, api.tuneFile)) {
+            toast.success(`Tune "${currentState.tuneTitle}" was succesfully patched.`, {
+                position: "bottom-center", autoClose: 1250, hideProgressBar: true,
+                closeOnClick: true, pauseOnHover: false, draggable: true,
+                progress: undefined, theme: "colored"
+            })
+        } else {
+            toast.error(`There was a problem saving the file :( Maybe try again?`, {
+                position: "bottom-center", autoClose: 2500, hideProgressBar: true,
+                closeOnClick: true, pauseOnHover: false, draggable: true,
+                progress: undefined, theme: "colored"
+            })
+        }
     }
 
     const onInputChange = (e) => setCurrentState({ ...currentState, [e.target.id]: e.target.value })
@@ -91,20 +105,29 @@ const Home = () => {
     return (
         <div>
             <section>
-                <h1>About</h1>
-                <p>Change the appearance of locked tunes from any Forza Horizon title.</p>
+                <h2>How to use:</h2>
+                <p>NOTE: Do not have the tune manager open while using this app. It may cause your game to crash.</p>
+                <p>Click the "Select a tune" dropdown and wait for the tune files to load. Select the tune you'd like to modify.</p>
+                <p>Each car has different upgrades available, so be sure you are choosing the correct part index. For example, a car may
+                    have 3 hoods available, with the default (stock) hood being index 0, the second upgrade being index 1, and the third being index 2.
+                </p>
+
+                <p>When you are done, scroll to the bottom and click "Save tune", You should get a success (or fail) message, and you can then
+                    open the tune manager to load your newly modified tune.
+                </p>
+                
             </section>
 
             <section>
                 <select class="btn" onClick={loadTuneFiles} onChange={handleTuneChange}>
-                    <option style={{textAlign:'center'}} key={0} value={"Select a tune"}>-- Select a tune --</option>
+                    <option style={{ textAlign: 'center' }} key={0} value={"Select a tune"}>-- Select a tune --</option>
                     {currentState.tuneFiles.map((tuneFile) => <option key={tuneFile.id} value={tuneFile.id}>{tuneFile.metadata.getTitle()}</option>)}
                 </select>
                 <p className="error-text">{currentState.error}</p>
-                <p>Ordinal: {currentState.ordinal}</p>
-                <p>Title: {currentState.tuneTitle}</p>
-                <p>Owner: {currentState.tuneOwner}</p>
-                <p>Description: {currentState.tuneDescription}</p>
+                <p><b>Title:</b> {currentState.tuneTitle}</p>
+                <p><b>Description:</b> {currentState.tuneDescription}</p>
+                <p><b>Ordinal:</b> {currentState.ordinal}</p>
+                <p><b>Owner:</b> {currentState.tuneOwner}</p>
                 {/* <p>Upload date: {currentState.tuneUploadDate}</p> */}
             </section>
 
