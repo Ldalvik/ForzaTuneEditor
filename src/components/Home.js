@@ -32,7 +32,7 @@ const Home = () => {
                 fileHandler: fileHandler
             })
         } catch (error) {
-            console.log(error);
+            console.log(error)
         }
     }
 
@@ -121,14 +121,14 @@ const Home = () => {
             <section>
                 <select class="btn" onClick={loadTuneFiles} onChange={handleTuneChange}>
                     <option style={{ textAlign: 'center' }} key={0} value={"Select a tune"}>-- Select a tune --</option>
-                    {currentState.tuneFiles.map((tuneFile) => <option key={tuneFile.id} value={tuneFile.id}>{tuneFile.metadata.getTitle()}</option>)}
+                    {currentState.tuneFiles.map((tuneFile) => <option key={tuneFile.id} value={tuneFile.id}>{tuneFile.metadata.getGamertag()}  -  {tuneFile.metadata.getTitle()}</option>)}
                 </select>
                 <p className="error-text">{currentState.error}</p>
                 <p><b>Title:</b> {currentState.tuneTitle}</p>
                 <p><b>Description:</b> {currentState.tuneDescription}</p>
                 <p><b>Ordinal:</b> {currentState.ordinal}</p>
                 <p><b>Owner:</b> {currentState.tuneOwner}</p>
-                {/* <p>Upload date: {currentState.tuneUploadDate}</p> */}
+                <p><b>Upload date:</b> {currentState.tuneUploadDate}</p>
             </section>
 
             <PartInput
