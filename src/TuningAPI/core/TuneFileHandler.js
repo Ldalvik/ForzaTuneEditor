@@ -1,3 +1,5 @@
+import MetadataAPI from './MetadataAPI'
+
 const path = require('path')
 const fs = window.require('fs')
 const homedir = window.require('os').homedir()
@@ -11,8 +13,9 @@ export default class TuneFileHandler {
         this.tuneFiles = []
     }
 
-    checkForzaExists = async (isSteamVersion) => await fs.existsSync(isSteamVersion ? this.STEAM_FORZA_PATH : this.FORZA_PATH)
-
+    checkForzaExists = async (isSteamVersion) => {
+        return await fs.existsSync(isSteamVersion ? this.STEAM_FORZA_PATH : this.FORZA_PATH)
+    }
     async loadTuneFiles(file = null) {
         const folder = file || this.TUNE_FILES_PATH;
         try {
@@ -28,11 +31,13 @@ export default class TuneFileHandler {
                 } else if (fileInfo.isFile() && fileInfo.size === 378) {
                     // If it's a file and its 378 bytes, it's most likely a tune
                     const tuneData = await fs.promises.readFile(fileDirectory)
+                    const metadataAPI = new MetadataAPI(folder)
+                    await metadataAPI.loadMetadata()
                     this.tuneFiles.push({
                         id: fileName,
                         tuneFolderPath: folder,
                         data: tuneData,
-                        //metadata: new MetadataAPI(folder) 
+                        metadata: metadataAPI
                     });
                 }
             }
