@@ -4,6 +4,9 @@ export default class TuningAPI {
     }
 
     // Get tune file values
+    getIsLocked() {
+        return this.getValue(0) === 2
+    }
     getOrdinal() {
         return this.getValue(2);
     }
