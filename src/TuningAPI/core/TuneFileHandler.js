@@ -52,8 +52,10 @@ export default class TuneFileHandler {
         await fs.writeFile(tunePath, tuneFileData, (error) => {
             if (error) {
                 console.log(error)
+                return false
             } else {
                 console.log(`Saved tune at ${tunePath}`)
+                return true
             }
         })
     }
