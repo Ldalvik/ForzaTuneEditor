@@ -8,14 +8,15 @@ const url = require('url');
 let mainWindow;
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 600,
+    height: 800,
+    frame: false,
     webPreferences: {
       contextIsolation: false,
       enableRemoteModule: true,
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
-      nodeIntegrationInSubFrames: true
+      nodeIntegrationInSubFrames: true,
     }
   });
 
