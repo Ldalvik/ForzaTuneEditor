@@ -41,7 +41,7 @@ const Home = () => {
         setCurrentState({
             ...currentState,
             api: api,
-            tuneFileId: tuneFile.id,  // Get metadata name eventually
+            tuneFileId: tuneFile.id,
             ordinal: api.getOrdinal(),
             carBody: api.getCarBody(),
             frontBumper: api.getFrontBumper(),
@@ -49,6 +49,10 @@ const Home = () => {
             rearWing: api.getRearWing(),
             hood: api.getHood(),
             sideskirts: api.getSideskirts(),
+            tuneTitle: tuneFile.metadata.getTitle(),
+            tuneDescription: tuneFile.metadata.getDescription(),
+            tuneUploadDate: tuneFile.metadata.getUploadDate(),
+            tuneOwner: tuneFile.metadata.getGamertag(),
             //rims: api.getRims(),
             //turbo: api.getTurbo()
         })
@@ -94,10 +98,14 @@ const Home = () => {
             <section>
                 <select class="btn" onClick={loadTuneFiles} onChange={handleTuneChange}>
                     <option style={{textAlign:'center'}} key={0} value={"Select a tune"}>-- Select a tune --</option>
-                    {currentState.tuneFiles.map((tuneFile) => <option key={tuneFile.id} value={tuneFile.id}>{tuneFile.id}</option>)}
+                    {currentState.tuneFiles.map((tuneFile) => <option key={tuneFile.id} value={tuneFile.id}>{tuneFile.metadata.getTitle()}</option>)}
                 </select>
                 <p className="error-text">{currentState.error}</p>
                 <p>Ordinal: {currentState.ordinal}</p>
+                <p>Title: {currentState.tuneTitle}</p>
+                <p>Owner: {currentState.tuneOwner}</p>
+                <p>Description: {currentState.tuneDescription}</p>
+                {/* <p>Upload date: {currentState.tuneUploadDate}</p> */}
             </section>
 
             <PartInput
