@@ -5,7 +5,7 @@ const PartInput = ({id, title, onInputChanged, tuneValue}) => {
             <input 
                 id={id} 
                 type="number"
-                min={0}
+                min={-1}
                 className="tune-input-box"
                 value={tuneValue} 
                 step={1}
