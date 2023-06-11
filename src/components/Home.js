@@ -18,7 +18,7 @@ const Home = () => {
         rearWing: 0,
         hood: 0,
         sideskirts: 0,
-        //rims: 0, 
+        //rims: "", 
         //turbo: 0
     })
 
@@ -96,7 +96,7 @@ const Home = () => {
         if (!await fileHandler.checkForzaExists(false)) { // check for steam version eventually
             setCurrentState({
                 ...currentState,
-                error: `It seems that the Microsoft version of Forza wasn't detected on your PC. Make sure ${fileHandler.FORZA_PATH} exists and is accesible.`
+                error: `It looks like the Microsoft version of Forza wasn't detected on your PC. Make sure ${fileHandler.FORZA_PATH} exists and is accessible.`
             })
         }
     }

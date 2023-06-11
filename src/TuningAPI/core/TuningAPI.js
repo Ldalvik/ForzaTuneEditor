@@ -1,9 +1,9 @@
 export default class TuningAPI {
     constructor(tuneFile) {
         this.tuneFile = new Uint8Array(tuneFile)
-        
+        // Extract values by tuple eventually
     }
-    
+
     // Get tune file values
     getVersion() {
         return this.getValue(0)

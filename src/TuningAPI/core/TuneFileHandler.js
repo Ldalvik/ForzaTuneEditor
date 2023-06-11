@@ -31,7 +31,7 @@ export default class TuneFileHandler {
                 } else if (fileInfo.isFile() && (fileInfo.size === 378 || fileInfo.size === 386)) {
                     // If it's a file and its 378 (or 386) bytes, it's most likely a tune
                     const tuneData = await fs.promises.readFile(fileDirectory)
-                    // Tune version check
+                    // Tune version, final check to verify if its a tune
                     const newTune = fileInfo.size === 386
                     if(tuneData[0] !== (newTune ? 3 : 2)) return
 
