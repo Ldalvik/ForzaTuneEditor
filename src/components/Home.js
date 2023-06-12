@@ -13,13 +13,13 @@ const Home = () => {
         error: null,
         ordinal: null,
         carBody: 0,
-        frontBumper: 0,
-        rearBumper: 0,
-        rearWing: 0,
+        bumperFront: 0,
+        bumperRear: 0,
+        wingRear: 0,
         hood: 0,
         sideskirts: 0,
-        //rims: "", 
-        //turbo: 0
+        rims: 0, 
+        turbo: 0
     })
 
     async function loadTuneFiles() {
@@ -35,7 +35,7 @@ const Home = () => {
             console.log(error)
         }
     }
-
+    
     let handleTuneChange = (e) => {
         if (e.target.value === "Select a tune") return
 
@@ -44,20 +44,26 @@ const Home = () => {
         setCurrentState({
             ...currentState,
             api: api,
-            tuneFileId: tuneFile.id,
+
             ordinal: api.getOrdinal(),
             carBody: api.getCarBody(),
-            frontBumper: api.getFrontBumper(),
-            rearBumper: api.getRearBumper(),
-            rearWing: api.getRearWing(),
+            bumperFront: api.getBumperFront(),
+            bumperRear: api.getBumperRear(),
+            wingRear: api.getWingRear(),
             hood: api.getHood(),
             sideskirts: api.getSideskirts(),
+            //rims: api.getRims(),
+            //turbo: api.getTurbo(),
+            //twinTurbo: api.getTwinTurbo(),
+            //quadTurbo: api.getQuadTurbo(),
+
+            tuneFileId: tuneFile.id,
+            tuneVersion: api.getVersion(),
             tuneTitle: tuneFile.metadata.getTitle(),
             tuneDescription: tuneFile.metadata.getDescription(),
             tuneUploadDate: tuneFile.metadata.getUploadDate(),
             tuneOwner: tuneFile.metadata.getGamertag(),
-            //rims: api.getRims(),
-            //turbo: api.getTurbo()
+            tuneLocation: tuneFile.tuneFolderPath,
         })
     }
 
@@ -66,15 +72,14 @@ const Home = () => {
     function saveTuneFile() {
         const api = currentState.api
         api.setCarBody(currentState.carBody)
-        api.setFrontBumper(currentState.frontBumper)
-        api.setRearBumper(currentState.rearBumper)
-        api.setRearWing(currentState.rearWing)
+        api.setBumperFront(currentState.bumperFront)
+        api.setBumperRear(currentState.bumperRear)
+        api.setWingRear(currentState.wingRear)
         api.setHood(currentState.hood)
         api.setSideskirts(currentState.sideskirts)
-        api.setSideskirts(currentState.sideskirts)
-        // api.setRims(currentState.rims)
+        //api.setRims(currentState.rims)
         // api.setTurbo(currentState.turbo)
-        if (saveTune(currentState.tuneFileId, api.tuneFile)) {
+        if (saveTune(currentState.tuneFileId, api.build())) {
             toast.success(`Tune "${currentState.tuneTitle}" was succesfully patched.`, {
                 position: "bottom-center", autoClose: 1250, hideProgressBar: true,
                 closeOnClick: true, pauseOnHover: false, draggable: true,
@@ -125,10 +130,12 @@ const Home = () => {
                 </select>
                 <p className="error-text">{currentState.error}</p>
                 <p><b>Title:</b> {currentState.tuneTitle}</p>
+                <p><b>Tune version:</b> {currentState.version}</p>
                 <p><b>Description:</b> {currentState.tuneDescription}</p>
                 <p><b>Ordinal:</b> {currentState.ordinal}</p>
                 <p><b>Owner:</b> {currentState.tuneOwner}</p>
                 <p><b>Upload date:</b> {currentState.tuneUploadDate}</p>
+                <p><b>Location:</b> <span className="debug">{currentState.tuneLocation}</span></p>
             </section>
 
             <PartInput
@@ -139,17 +146,17 @@ const Home = () => {
             />
 
             <PartInput
-                id="frontBumper"
+                id="bumperFront"
                 title="Front Bumper"
                 onInputChanged={onInputChange}
-                tuneValue={currentState.frontBumper}
+                tuneValue={currentState.bumperFront}
             />
 
             <PartInput
-                id="rearBumper"
+                id="bumperRear"
                 title="Rear Bumper"
                 onInputChanged={onInputChange}
-                tuneValue={currentState.rearBumper}
+                tuneValue={currentState.bumperRear}
             />
 
             <PartInput
@@ -160,10 +167,10 @@ const Home = () => {
             />
 
             <PartInput
-                id="rearWing"
+                id="wingRear"
                 title="Rear Wing"
                 onInputChanged={onInputChange}
-                tuneValue={currentState.rearWing}
+                tuneValue={currentState.wingRear}
             />
 
             <PartInput
@@ -173,14 +180,14 @@ const Home = () => {
                 tuneValue={currentState.carBody}
             />
 
-            {/* <PartDropdown
+            {/* <PartInput
                 id="rims"
                 title="Rims"
                 onInputChanged={onInputChange}
                 tuneValue={currentState.rims}
-            />
+            /> */}
 
-            <PartDropdown
+            {/*<PartDropdown
                 id="turbo"
                 title="Turbo"
                 onInputChanged={onInputChange}
