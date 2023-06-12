@@ -1,76 +1,84 @@
 export default class TuningAPI {
     constructor(tuneFile) {
-        this.tuneFile = new Uint8Array(tuneFile)
-        // Extract values by tuple eventually
+        this.rawTuneFile = new Uint8Array(tuneFile)
+
+        if(tuneFile.length === 378) { 
+            this.upgradeSection =  new Uint16Array(this.rawTuneFile.slice(2, 194))
+        } else if(tuneFile.length === 386) {
+            this.upgradeSection = new Uint16Array(this.rawTuneFile.slice(2, 200))
+        }
     }
 
-    // Get tune file values
+    build() {
+        this.rawTuneFile.set(this.upgradeSection, 2)
+        return this.rawTuneFile
+    }
+    
     getVersion() {
-        return this.getValue(0)
+        return this.rawTuneFile[0]
     }
     getOrdinal() {
-        return this.getValue(2)
+        return this.getValue(0)
     }
     getRims() {
-        return this.getPartIndex(10)
+        return this.getValue(8)
     }
     getCarBody() {
-        return this.getPartIndex(22)
+        return this.getPartIndex(this.getValue(20))
     }
-    getRearWing() {
-        return this.getPartIndex(50)
+    getWingRear() {
+        return this.getPartIndex(this.getValue(48))
     }
-    getFrontBumper() {
-        return this.getPartIndex(150)
+    getBumperFront() {
+        return this.getPartIndex(this.getValue(148))
     }
-    getRearBumper() {
-        return this.getPartIndex(154)
+    getBumperRear() {
+        return this.getPartIndex(this.getValue(152))
     }
     getHood() {
-        return this.getPartIndex(158)
+        return this.getPartIndex(this.getValue(156))
     }
     getSideskirts() {
-        return this.getPartIndex(162)
+        return this.getPartIndex(this.getValue(160))
     }
 
-    // Set tune file values
     setRims(id) {
-        this.setPartIndex(10, id)
+        this.setValue(8, id)
     }
     setCarBody(partIndex) {
-        this.setPartIndex(22, partIndex)
+        this.setPartIndex(20, partIndex)
     }
-    setRearWing(partIndex) {
-        this.setPartIndex(50, partIndex)
+    setWingRear(partIndex) {
+        this.setPartIndex(48, partIndex)
     }
-    setFrontBumper(partIndex) {
-        this.setPartIndex(150, partIndex)
+    setBumperFront(partIndex) {
+        this.setPartIndex(148, partIndex)
     }
-    setRearBumper(partIndex) {
-        this.setPartIndex(154, partIndex)
+    setBumperRear(partIndex) {
+        this.setPartIndex(152, partIndex)
     }
     setHood(partIndex) {
-        this.setPartIndex(158, partIndex)
+        this.setPartIndex(156, partIndex)
     }
     setSideskirts(partIndex) {
-        this.setPartIndex(162, partIndex)
+        this.setPartIndex(160, partIndex)
     }
 
     // Upgrade part specific (ordinal + pad + index)
-    getPartIndex(byteIndex) {
-        return parseInt(this.getValue(byteIndex).toString().slice(-3))
+    getPartIndex(upgradeByte) {
+        return parseInt(upgradeByte.toString().slice(-3))
     }
     setPartIndex(byteIndex, partIndex) {
         this.setValue(byteIndex, this.getOrdinal() + partIndex.toString().padStart(3, '0'))
     }
 
-    // General
+    // Raw value editing
     getValue(byteIndex) {
-        return this.tuneFile.slice(byteIndex, byteIndex + 4)
+        return this.upgradeSection.slice(byteIndex, byteIndex + 4)
             .reduceRight((value, byte) => (value << 8) + byte, 0)
     }
     setValue(byteIndex, partValue) {
-        this.tuneFile.set(
+        this.upgradeSection.set(
             Uint8Array.from({ length: 4 }, (_, i) => (partValue >> (i * 8)) & 0xff), byteIndex)
     }
 }
