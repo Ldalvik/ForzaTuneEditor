@@ -28,12 +28,11 @@ export default class TuneFileHandler {
                     // Look through all folders underneath the current directory
                     // Probably very inefficient
                     await this.loadTuneFiles.call(this, fileDirectory) // instead of normal recursion, use function.call to keep class context
-                } else if (fileInfo.isFile() && (fileInfo.size === 378 || fileInfo.size === 386)) {
-                    // If it's a file and its 378 (or 386) bytes, it's most likely a tune
+                } else if (fileInfo.isFile() && fileInfo.size === 386) {
+                    // If it's a file and its 386 bytes, it's most likely a tune
                     const tuneData = await fs.promises.readFile(fileDirectory)
                     // Tune version, final check to verify if its a tune
-                    const newTune = fileInfo.size === 386
-                    if(tuneData[0] !== (newTune ? 3 : 2)) return
+                    if(tuneData[0] !== 3) return
 
                     const metadataAPI = new MetadataAPI(folder, newTune)
                     await metadataAPI.loadMetadata()
