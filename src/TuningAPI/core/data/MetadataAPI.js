@@ -2,9 +2,8 @@ const fs = window.require('fs')
 
 export default class MetadataAPI {
     // TODO: Get other options such as car class, type, tags, etc
-    constructor(tuneFolder, newTune=false) {
-        this.newTune = newTune
-        this.tuneFolder = tuneFolder
+    constructor(tuneFolderPath) {
+        this.tuneFolderPath = tuneFolderPath
         this.tuneMetadata = null
         this.titleLength = null
         this.descriptionLength = null
@@ -13,12 +12,12 @@ export default class MetadataAPI {
 
     async loadMetadata() {
         try {
-            const files = await fs.promises.readdir(this.tuneFolder)
+            const files = await fs.promises.readdir(this.tuneFolderPath)
             for (const fileName of files) {
-                const fileDirectory = `${this.tuneFolder}/${fileName}`
+                const fileDirectory = `${this.tuneFolderPath}/${fileName}`
                 const fileData = await fs.promises.readFile(fileDirectory)
                 // Pretty fragile checking, but probably OK. Tune folder files aren't very diverse.
-                if (!fileName.includes("container") && fileData[0] === (this.newTune ? 6 : 4)) {
+                if (!fileName.includes("container") && fileData[0] === 6) {
                     this.tuneMetadata = new Uint8Array(fileData)
                     this.titleLength = this.tuneMetadata[4] * 2
                     this.descriptionLength = this.tuneMetadata[8 + this.titleLength] * 2

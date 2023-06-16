@@ -136,7 +136,9 @@ header ul {
     font-weight: 700;
     color: #d9d9d9;
 }
-
+.btn.fill {
+    width: 100%;
+}
 .btn:hover {
     -moz-transition: all .3s ease-in;
     -o-transition: all .3s ease-in;
