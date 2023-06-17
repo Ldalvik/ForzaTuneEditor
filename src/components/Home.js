@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PartInput from './PartInput'
 import { toast } from 'react-toastify'
 import ForzaAPI from '../TuningAPI/core/ForzaAPI'
 
 const Home = () => {
+    const [forzaAPI, setForzaAPI] = useState(new ForzaAPI())
+    const [tuneFiles, setTuneFiles] = useState([])
+    const [error, setError] = useState("")
+
     const [currentTuneData, setCurrentTuneData] = useState({
         id: "",
         location: "",
@@ -20,8 +24,6 @@ const Home = () => {
         wingRear: "",
         hood: "",
         sideskirts: "",
-        // rims: "",
-        // turbo: ""
     })
 
     const [newTuneData, setNewTuneData] = useState({
@@ -31,13 +33,7 @@ const Home = () => {
         wingRear: 0,
         hood: 0,
         sideskirts: 0,
-        //rims: 0,
-        //turbo: 0
     })
-
-    const [forzaAPI, setForzaAPI] = useState(new ForzaAPI())
-    const [tuneFiles, setTuneFiles] = useState([])
-    const [error, setError] = useState("")
 
     let handleTuneChange = (e) => {
         if (e.target.value === "Select a tune") return
@@ -59,10 +55,6 @@ const Home = () => {
             wingRear: forzaAPI.upgrades.getWingRear(),
             hood: forzaAPI.upgrades.getHood(),
             sideskirts: forzaAPI.upgrades.getSideskirts(),
-            //rims: forzaAPI.upgrades.getRims(),
-            //turbo: forzaAPI.upgrades.getTurbo(),
-            //twinTurbo: forzaAPI.upgrade.getTwinTurbo(),
-            //quadTurbo: forzaAPI.upgrades.getQuadTurbo(),
         })
         setNewTuneData({
             carBody: forzaAPI.upgrades.getCarBody(),
@@ -71,14 +63,8 @@ const Home = () => {
             wingRear: forzaAPI.upgrades.getWingRear(),
             hood: forzaAPI.upgrades.getHood(),
             sideskirts: forzaAPI.upgrades.getSideskirts(),
-            //rims: forzaAPI.upgrades.getRims(),
-            //turbo: forzaAPI.upgrades.getTurbo(),
-            //twinTurbo: forzaAPI.upgrade.getTwinTurbo(),
-            //quadTurbo: forzaAPI.upgrades.getQuadTurbo(),
         })
     }
-
-    const saveTune = async (tuneId, tuneData) => forzaAPI.fileHandler.saveTuneById(tuneId, tuneData)
 
     async function loadTuneFiles() {
         try {
@@ -87,18 +73,17 @@ const Home = () => {
             console.log(error)
         }
     }
-
-    function saveTuneFile() {
+    
+    async function saveTuneFile() {
         forzaAPI.upgrades.setCarBody(newTuneData.carBody)
         forzaAPI.upgrades.setBumperFront(newTuneData.bumperFront)
         forzaAPI.upgrades.setBumperRear(newTuneData.bumperRear)
         forzaAPI.upgrades.setWingRear(newTuneData.wingRear)
         forzaAPI.upgrades.setHood(newTuneData.hood)
         forzaAPI.upgrades.setSideskirts(newTuneData.sideskirts)
-        //forzaAPI.upgrades.setRims(newTuneData.rims)
-        //forzaAPI.upgrades.setTurbo(newTuneData.turbo)
-        if (saveTune(currentTuneData.id, forzaAPI.build())) {
-            toast.success(`Tune "${currentTuneData.tuneTitle}" was succesfully patched.`, {
+    
+        if (forzaAPI.fileHandler.saveTuneById(currentTuneData.id, forzaAPI.build())) {
+            toast.success(`Tune "${currentTuneData.title}" was succesfully patched.`, {
                 position: "bottom-center", autoClose: 1250, hideProgressBar: true,
                 closeOnClick: true, pauseOnHover: false, draggable: true,
                 progress: undefined, theme: "colored"
@@ -136,7 +121,7 @@ const Home = () => {
             <section>
                 <h2>How to use:</h2>
                 <p>NOTE: Do not have the tune manager open while using this app. It may cause your game to crash.</p>
-                <p>Click the "Select a tune" dropdown and wait for the tune files to load. Select the tune you'd like to modify.</p>
+                <p>Click the "Load tunes" button and wait for it to say "Select a tune". Select the tune you'd like to modify.</p>
                 <p>Each car has different upgrades available, so be sure you are choosing the correct part index. For example, a car may
                     have 3 hoods available, with the default (stock) hood being index 0, the second upgrade being index 1, and the third being index 2.
                 </p>
@@ -206,7 +191,7 @@ const Home = () => {
                 newTuneValue={newTuneData.carBody}
             />
 
-            {/* <PartInput
+            {/* <PartDropdown
                 id="rims"
                 title="Rims"
                 onInputChanged={onInputChange}
