@@ -45,7 +45,9 @@
     ]
   },
   "devDependencies": {
+    "cypress": "^12.14.0",
     "electron": "^25.0.1",
+    "jest": "^27.5.1",
     "react-scripts": "5.0.1"
   }
 }
