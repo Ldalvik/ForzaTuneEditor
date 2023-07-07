@@ -1,6 +1,6 @@
 import React from 'react'
 import NavBar from './NavBar'
-import TuneEditor from "./Home"
+import TuneEditor from "./TuneEditor"
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

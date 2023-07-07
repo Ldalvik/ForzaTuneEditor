@@ -22,6 +22,8 @@ const NavBar = () => {
         checkForUpdate()
     },[])
 
+    const [tuneMode, setTuneMode] = useState()
+
     return (
         <div>
 

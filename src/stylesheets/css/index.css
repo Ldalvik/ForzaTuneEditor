@@ -119,46 +119,6 @@ header ul {
     width: auto
 }
 
-
-.btn {
-    height: 33px;
-    width: auto;
-    display: inline-block;
-    outline: 0;
-    border: 0;
-    cursor: pointer;
-    background-color: #10acdc;
-    border-radius: 4px;
-    box-shadow: 0 1px 2px -2px rgba(0, 0, 0, .5);
-    padding: 8px 16px;
-    font-size: 16px;
-    border-bottom: 2px solid #1a90b4;
-    font-weight: 700;
-    color: #d9d9d9;
-}
-.btn.fill {
-    width: 100%;
-}
-.btn:hover {
-    -moz-transition: all .3s ease-in;
-    -o-transition: all .3s ease-in;
-    -webkit-transition: all .3s ease-in;
-    transition: all .3s ease-in;
-
-    background-color: #2bc5f4;
-    box-shadow: 0 3px 4px 0px rgba(0, 0, 0, .4);
-}
-
-.btn:active {
-    -moz-transition: all .1s ease-in;
-    -o-transition: all .1s ease-in;
-    -webkit-transition: all .1s ease-in;
-    transition: all .1s ease-in;
-    background-color: #1a9cc4;
-    box-shadow: 0 3px 4px 0px rgba(0, 0, 0, .9);
-    border-bottom: 1px solid rgb(13, 94, 118);
-}
-
 select option {
     background: rgba(44, 44, 44);
     color: d9d9d9;
@@ -453,4 +413,69 @@ input[type=file]::file-selector-button:hover {
 
 ::-webkit-scrollbar {
     display: none;
+}
+
+
+.btn {
+    height: 33px;
+    width: auto;
+    display: inline-block;
+    outline: 0;
+    border: 0;
+    cursor: pointer;
+    background-color: #10acdc;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px -2px rgba(0, 0, 0, .5);
+    padding: 8px 16px;
+    font-size: 16px;
+    border-bottom: 2px solid #1a90b4;
+    font-weight: 700;
+    color: #d9d9d9;
+}
+
+
+.btn.fill {
+    width: 100%;
+}
+
+.btn:hover {
+    -moz-transition: all .3s ease-in;
+    -o-transition: all .3s ease-in;
+    -webkit-transition: all .3s ease-in;
+    transition: all .3s ease-in;
+
+    background-color: #2bc5f4;
+    box-shadow: 0 3px 4px 0px rgba(0, 0, 0, .4);
+}
+
+.btn:active {
+    -moz-transition: all .1s ease-in;
+    -o-transition: all .1s ease-in;
+    -webkit-transition: all .1s ease-in;
+    transition: all .1s ease-in;
+    background-color: #1a9cc4;
+    box-shadow: 0 3px 4px 0px rgba(0, 0, 0, .9);
+    border-bottom: 1px solid rgb(13, 94, 118);
+}
+
+.tune-mode-button {
+    -moz-transition: all .3s ease-in;
+    -o-transition: all .3s ease-in;
+    -webkit-transition: all .3s ease-in;
+    transition: all .3s ease-in;
+
+    background: transparent;
+    border: 1px solid #0ea9d8;
+    width: 100%;
+}
+
+.tune-mode-button:hover {
+    background-color: #2bc5f42a;
+    box-shadow: 0 3px 4px 0px rgba(0, 0, 0, .4);
+}
+
+.tune-mode-button:active {
+    background-color: #10c2f86b;
+    box-shadow: 0 3px 4px 0px rgba(0, 0, 0, .9);
+    border-bottom: 1px solid rgb(13, 94, 118);
 }
